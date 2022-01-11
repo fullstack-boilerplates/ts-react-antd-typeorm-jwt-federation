@@ -1,12 +1,12 @@
 import { join } from "path"
 import { createConnection } from "typeorm"
-import { User } from "./db/User"
+import { Book } from "./db/Book"
 
 const { MYSQL } = process.env
 
 let conn: any = undefined
 let commonOpts = {
-  entities: [User],
+  entities: [Book],
   synchronize: true
 }, dbOpts = MYSQL
   ? {

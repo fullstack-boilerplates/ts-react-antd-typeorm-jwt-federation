@@ -1,4 +1,4 @@
-import { Select } from 'antd'
+import { Select } from 'shared-libs/src/exports/antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { FC, ReactNode, useState } from "react"
 import { FilterDropdownProps } from "antd/lib/table/interface"

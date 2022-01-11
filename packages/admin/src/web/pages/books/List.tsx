@@ -1,22 +1,21 @@
-import { Button, notification, PageHeader, Space, Table } from "antd"
+import { Button, notification, PageHeader, Space, Table } from "shared-libs/src/exports/antd"
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { fieldContains, delUser, listUser, ListUserResult, updateUser } from "../../../../../apis/admin/user"
-import { CellUpdateCheckbox } from '../../../../utils/CellUpdateCheckbox'
-import confirm from "antd/lib/modal/confirm"
-import { getSearchFilterProps } from '../../../../utils/filter'
-import { SorterResult } from "antd/lib/table/interface"
-import { IUser } from "../../../../../common/user"
+import { Link } from "shared-libs/src/exports/react-router-dom"
+import { fieldContains, del, list as listBook, ListResult } from "../../../apis/admin/book"
+import { Modal } from "shared-libs/src/exports/antd"
+import { getSearchFilterProps } from '../../utils/filter'
 
-const UserList = () => {
+const { confirm } = Modal
+
+const List = () => {
   let [options, setOptions] = useState({} as any)
   let [loading, setLoading] = useState(0)
-  let [data, setData] = useState({} as ListUserResult)
+  let [data, setData] = useState({} as ListResult)
 
   useEffect(() => {
     if (!options) return
     setLoading(x => x + 1)
-    listUser(options).then(d => {
+    listBook(options).then(d => {
       setData(d)
       setLoading(x => x - 1)
     }).catch(e => {
@@ -33,7 +32,7 @@ const UserList = () => {
   return <div>
     <PageHeader>User</PageHeader>
     <Space style={{ marginBottom: 16 }}>
-      <Link to="/admin/users/create">
+      <Link to="/admin/books/create">
         <Button type="link">Create</Button>
       </Link>
     </Space>
@@ -43,48 +42,44 @@ const UserList = () => {
       rowKey={'id'}
       columns={[
         {
-          title: 'account',
-          dataIndex: 'account',
-          key: 'account',
+          title: 'name',
+          dataIndex: 'name',
+          key: 'name',
           ...getSearchFilterProps(
-            async val => await fieldContains('account',val),
+            async val => await fieldContains('name', val),
             val => setOptions({
               ...options,
               filters: {
-                account: val
+                name: val
               }
             })
           ),
-          filteredValue: [filters.account || '']
-        }, {
-          title: 'admin',
-          dataIndex: 'isAdmin',
-          sorter: true,
-          key: 'isAdmin',
-          render: (x, u) => <CellUpdateCheckbox val={x} updateFn={async y => await updateUser({
-            id: u.id,
-            isAdmin: y
-          })} />
-        }, {
-          title: 'disabled',
-          dataIndex: 'disabled',
-          sorter: true,
-          key: 'disabled',
-          render: (x, u) => <CellUpdateCheckbox val={x} updateFn={async y => await updateUser({
-            id: u.id,
-            disabled: y
-          })} />
-        }, {
+          filteredValue: [filters.name || '']
+        },{
+          title: 'intro',
+          dataIndex: 'intro',
+          key: 'intro',
+          ...getSearchFilterProps(
+            async val => await fieldContains('intro', val),
+            val => setOptions({
+              ...options,
+              filters: {
+                intro: val
+              }
+            })
+          ),
+          filteredValue: [filters.intro || '']
+        } , {
           title: 'operations',
           key: 'operations',
           render: (x, u) => <>
             <Link to={`/admin/users/edit/${u.id}`}><Button type="link">修改</Button></Link>
             <Button onClick={() => confirm({
               title: 'confirm',
-              content: `delete  ${u.account}?`,
+              content: `delete  ${u.name}?`,
               onOk: async () => {
                 try {
-                  await delUser(u.id)
+                  await del(u.id)
                   notification.success({
                     placement: 'bottomRight',
                     message: 'success'
@@ -103,7 +98,7 @@ const UserList = () => {
           </>
         },
       ]}
-      onChange={({ pageSize, current }, filters, sorter: SorterResult<IUser>) => {
+      onChange={({ pageSize, current }, filters, sorter: any) => {
         let { find = {} } = options
         console.log(`onChange!`)
         setOptions({
@@ -128,4 +123,4 @@ const UserList = () => {
   </div>
 }
 
-export default UserList
+export default List

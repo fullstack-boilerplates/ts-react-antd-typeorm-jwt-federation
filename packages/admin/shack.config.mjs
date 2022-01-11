@@ -1,6 +1,6 @@
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
+// import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import webpack from 'webpack'
@@ -38,7 +38,10 @@ export default {
               [
                 "auto-import", {
                   "declarations": [
-                    { "default": "React", "path": "react" }
+                    {
+                      "default": "React",
+                      "path": "react",
+                    }
                   ]
                 }
               ],
@@ -50,9 +53,10 @@ export default {
         use: {
           loader: '@shack-js/loader-fetch',
           options: {
-            apiPrefix: '/apis',
+            apiPrefix: `${process.env.PKG_ADMIN_URL}/apis`,
             backendFolder: 'src/apis',
-            sourceType: 'module'
+            sourceType: 'module',
+            postPath: 'shared-libs/src/exports/fetcher',
           }
         }
       }
@@ -62,37 +66,22 @@ export default {
     extensions: [".ts", ".tsx", ".js", ".mjs", ".cjs"]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: join(dirname(fileURLToPath(import.meta.url)), 'src', 'web', 'index.html'),
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: join(dirname(fileURLToPath(import.meta.url)), 'src', 'web', 'index.html'),
+    // }),
     new MiniCssExtractPlugin(),
     new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
-      name: "shared_libs",
+      name: "admin",
       filename: "remoteEntry.js",
       exposes: {
-        './src/web/exports': './src/web/exports.ts'
+        './src/exports/AdminRoute': './src/exports/AdminRoute.ts'
       },
       remotes: {
-        "shared-libs": `shared_libs@${process.env.PKG_SHARED_LIBS_URL}/remoteEntry.js`,
+        "admin-libs": `shared_libs@${process.env.PKG_SHARED_LIBS_URL}/remoteEntry.js`,
       },
       shared: {
-        react: {
-          singleton: true,
-          eager: true,
-        },
-        'react-dom': {
-          singleton: true,
-          eager: true,
-        },
-        'react-router-dom': {
-          singleton: true,
-          eager: true,
-        },
-        'antd': {
-          singleton: true,
-          eager: true,
-        }
+        react: {}
       }
     }),
   ],

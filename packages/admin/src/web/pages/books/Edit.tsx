@@ -1,22 +1,25 @@
-import { Alert, Button, PageHeader, Space, Spin, Form, Input, notification, Checkbox } from "antd"
-import { useForm } from "antd/lib/form/Form"
-import { useState } from "react"
-import { useParams } from "react-router"
-import { Link } from "react-router-dom"
-import { addUser, findUserById, updateUser } from "../../../../../apis/admin/user"
-import { accountExists } from "../../../../../apis/user"
-import { swr } from '../../../../utils/swr'
-import { accountValidator, passwordValidator } from "../../../../utils/validators"
+import {
+  Alert, Button, PageHeader, Space, Spin, Form, Input,
+  notification,
+} from "shared-libs/src/exports/antd"
 
-const UserEdit = () => {
-  let { id } = useParams() as { id?: string }
-  let [loading, value, error] = swr(async () => id ? await findUserById(id) : {})
+import { useState } from "react"
+import { Link, useParams } from "shared-libs/src/exports/react-router-dom"
+import { add, findById, update, exists } from "../../../apis/admin/book"
+import { swr } from '../../utils/swr'
+import { nameValidator } from "../../utils/validators"
+
+const { useForm } = Form
+
+const Edit = () => {
+  let { id=0 } = useParams() as { id?: string }
+  let [loading, value, error] = swr(async () => id ? await findById(id) : {})
   let [form] = useForm()
   let [operating, setOperating] = useState(false)
   return <div>
-    <PageHeader>{id ? `Edit#${id}` : `Create`}</PageHeader>
+    <PageHeader>Book {id ? `Edit#${id}` : `Create`}</PageHeader>
     <Space style={{ marginBottom: 16 }}>
-      <Link to="/admin/users/list">
+      <Link to="/admin/books/list">
         <Button type="link">List</Button>
       </Link>
     </Space>
@@ -28,37 +31,25 @@ const UserEdit = () => {
         form={form}
       >
         <Form.Item
-          label="Account"
-          name="account"
+          label="Name"
+          name="name"
           rules={id ? [] : [{
             validator: async (_, val) => {
-              accountValidator(val)
-              if (await accountExists(val)) throw `账号已存在`
+              nameValidator(val)
+              if (await exists(val)) throw `名称重复|name exists!`
             }
           }]}
         >
-          <Input disabled={!!id} />
+          <Input />
         </Form.Item>
 
         <Form.Item
-          label="Pass"
-          name="pass"
-          rules={[{
-            validator: async (_, val) => passwordValidator(val)
-          }]}
+          label="Intro"
+          name="intro"
         >
-          <Input.Password />
+          <Input />
         </Form.Item>
 
-
-        <Form.Item name="isAdmin" valuePropName="checked">
-          <Checkbox>isAdmin</Checkbox>
-        </Form.Item>
-
-
-        <Form.Item name="disabled" valuePropName="checked">
-          <Checkbox>disabled</Checkbox>
-        </Form.Item>
 
         <Form.Item shouldUpdate >
           {() => <Button type="primary" disabled={
@@ -71,13 +62,13 @@ const UserEdit = () => {
               try {
                 if (id) {
                   //更新
-                  await updateUser({
+                  await update({
                     ...form.getFieldsValue(),
-                    id: parseInt(id),
+                    id: parseInt(id as string),
                   })
                 } else {
                   //创建
-                  await addUser(form.getFieldsValue())
+                  await add(form.getFieldsValue())
                 }
                 notification.open({
                   message: 'cuccess',
@@ -106,4 +97,4 @@ const UserEdit = () => {
   </div>
 }
 
-export default UserEdit
+export default Edit

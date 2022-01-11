@@ -1,4 +1,4 @@
-import { Checkbox, notification, Spin } from "antd"
+import { Checkbox, notification, Spin } from "shared-libs/src/exports/antd"
 import { FC, useState } from "react"
 
 
