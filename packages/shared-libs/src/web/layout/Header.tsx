@@ -5,16 +5,18 @@ const AntHeader = Layout.Header
 const { Item } = Menu
 
 export const Header = ({
-  children = () => <></>
+  children = null
 }) => {
-  const [curentUser] = user.use()
+  const [currentUser] = user.use()
+
+  console.log({ currentUser })
   const history = useHistory()
   return <AntHeader>
     <div className="logo" />
     <Menu theme="dark" mode="horizontal" >
       <Item key="/" > <NavLink to="/">首页|Home</NavLink> </Item>
       {children}
-      {curentUser
+      {currentUser
         ? <Item key="/logout" onClick={() => {
           logout()
           history.push('/')

@@ -78,7 +78,7 @@ export default {
         './src/exports/AdminRoute': './src/exports/AdminRoute.ts'
       },
       remotes: {
-        "admin-libs": `shared_libs@${process.env.PKG_SHARED_LIBS_URL}/remoteEntry.js`,
+        "shared-libs": `shared_libs@${process.env.PKG_SHARED_LIBS_URL}/remoteEntry.js`,
       },
       shared: {
         react: {}
@@ -88,7 +88,7 @@ export default {
   output: {
     path: join(dirname(fileURLToPath(import.meta.url)), 'dist', '.web'),
     filename: '[name].[contenthash].js',
-    publicPath: '/',
+    // publicPath: '/',
     clean: true,
   },
   // optimization: {

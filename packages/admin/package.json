@@ -4,11 +4,7 @@
   "description": "",
   "main": "web/index.tsx",
   "scripts": {
-    "dev": "env-cmd -f ../../.env -x node --loader ts-node/esm node_modules/@shack-js/cli/src/index.mjs dev -e .ts -s dist/.web -a src/apis -p $PKG_ADMIN_PORT",
-    "dev:build": "env-cmd -f ../../.env shack build",
-    "dev:start": "env-cmd -f ../../.env -x shack start -e .js -s dist/.web -a dist/apis -p $PKG_ADMIN_PORT",
-    "build": "shack build && tsc",
-    "start": "shack start -e .js -s dist/.web -a dist/apis"
+    "dev": "env-cmd -f ../../.env -x node --loader ts-node/esm node_modules/@shack-js/cli/src/index.mjs dev -e .ts -s dist/.web -a src/apis -p $PKG_ADMIN_PORT"
   },
   "keywords": [],
   "author": "",

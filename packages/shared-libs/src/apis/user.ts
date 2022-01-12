@@ -1,6 +1,5 @@
 import { User } from "../common/db/User"
-import { addUser, IUser } from "../common/user"
-import { jwtSign, validateHash } from "../common/user"
+import { addUser, IUser, jwtSign, validateHash, jwtVerify } from "../common/user"
 
 const WRONG_PASS_LIMIT_PER_DAY = 5
 
@@ -30,6 +29,22 @@ export const accountExists = async (account: string) => {
   return !!count
 }
 
+export const isUser = async (token: string) => {
+  let user = await getUserFromToken(token)
+  return !!user
+}
+
+export const isAdmin = async (token: string) => {
+  let user = await getUserFromToken(token)
+  if (!user) throw '登录信息已失效|token outdated!'
+  return user.isAdmin
+}
+
+async function getUserFromToken(token:string){  
+  if (!token) throw '尚未登录|not logged in！'
+  let { account } = await jwtVerify(token)
+  return await User.findOne({ account })
+}
 
 function getDayNum() {
   let time = new Date().getTime()

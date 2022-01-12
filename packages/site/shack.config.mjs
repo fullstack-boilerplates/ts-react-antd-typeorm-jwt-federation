@@ -8,7 +8,7 @@ import webpack from 'webpack'
 const { ModuleFederationPlugin } = webpack.container
 
 export default {
-  entry: ['./src/web/index.tsx'],
+  entry: ['./src/web/index.ts'],
   module: {
     rules: [
       {
@@ -38,7 +38,10 @@ export default {
               [
                 "auto-import", {
                   "declarations": [
-                    { "default": "React", "path": "react" }
+                    {
+                      "default": "React",
+                      "path": "react",
+                    }
                   ]
                 }
               ],
@@ -50,9 +53,10 @@ export default {
         use: {
           loader: '@shack-js/loader-fetch',
           options: {
-            apiPrefix: '/apis',
+            apiPrefix: `/apis`,
             backendFolder: 'src/apis',
-            sourceType: 'module'
+            sourceType: 'module',
+            postPath: 'shared-libs/src/exports/fetcher',
           }
         }
       }
@@ -68,28 +72,14 @@ export default {
     new MiniCssExtractPlugin(),
     new CleanWebpackPlugin(),
     new ModuleFederationPlugin({
-      name: "shared_libs",
+      name: "admin",
       filename: "remoteEntry.js",
-      exposes: {
-        './src/web/exports': './src/web/exports.ts'
+      remotes: {
+        "shared-libs": `shared_libs@${process.env.PKG_SHARED_LIBS_URL}/remoteEntry.js`,
+        "admin": `admin@${process.env.PKG_ADMIN_URL}/remoteEntry.js`,
       },
       shared: {
-        react: {
-          singleton: true,
-          eager: true,
-        },
-        'react-dom': {
-          singleton: true,
-          eager: true,
-        },
-        'react-router-dom': {
-          singleton: true,
-          eager: true,
-        },
-        'antd': {
-          singleton: true,
-          eager: true,
-        }
+        react: {}
       }
     }),
   ],

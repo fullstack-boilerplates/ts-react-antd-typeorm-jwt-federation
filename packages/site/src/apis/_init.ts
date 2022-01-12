@@ -1,7 +1,6 @@
 import "reflect-metadata"
 import { join } from 'path'
 import { Express } from 'express'
-import { connect } from "../common/conn"
 
 interface Config {
   dev: boolean
@@ -13,6 +12,5 @@ interface Config {
 }
 
 export default async (app: Express, config: Config) => {
-  await connect()
   app.use('*', (req, res) => res.sendFile(join(config.assetsFolder, 'index.html')))
 }

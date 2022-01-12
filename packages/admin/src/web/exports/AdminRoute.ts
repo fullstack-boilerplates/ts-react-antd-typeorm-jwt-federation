@@ -1,1 +1,0 @@
-export { AdminRoute } from '../layout/AdminRoute'

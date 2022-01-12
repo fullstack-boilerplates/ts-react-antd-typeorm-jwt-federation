@@ -14,7 +14,6 @@ const USER_TOKEN_KEY = 'usertoken'
 
 export const user = new Store(undefined as IUser)
 
-
 export const login = (account: string, pass: string, opts: {
   remember?: boolean,
   onSuccess?: () => void | any,

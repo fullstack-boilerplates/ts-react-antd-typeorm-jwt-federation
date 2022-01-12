@@ -13,7 +13,6 @@ const Register = lazy(() => import('../pages/site/Register'))
 
 export const Layout = ({
   extraMenu = null,
-  children = null,
   routes = null,
 }) => {
   return <Router>
@@ -36,5 +35,3 @@ export const Layout = ({
     </AntLayout>
   </Router>
 }
-
-export default Layout
