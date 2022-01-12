@@ -15,13 +15,16 @@
 
 ```
 cd packages/shared-libs
-start npm run dev
+npm i
+start powershell {npm run dev}
 
 cd ../admin
-start npm run dev
+npm i
+start powershell {npm run dev}
 
 cd ../site
-start npm run dev
+npm i
+start powershell {npm run dev}
 ```
 
 open http://localhost:3003
